@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MyBank - Online Banking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #56ccf2, #2f80ed);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .app {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      width: 90%;
+      max-width: 400px;
+    }
+    h2 {
+      text-align: center;
+      color: #2f80ed;
+      margin-bottom: 1.5rem;
+    }
+    .input-group {
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: bold;
+    }
+    input[type="text"], input[type="number"], input[type="password"] {
+      width: 100%;
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      width: 100%;
+      padding: 0.7rem;
+      background: #2f80ed;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #2566c5;
+    }
+    .balance {
+      font-size: 1.5rem;
+      text-align: center;
+      margin: 1rem 0;
+    }
+    .hidden {
+      display: none;
+    }
+    .error {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <h2>🏦 Welcome to MyBank</h2>
+
+  <!-- Login Section -->
+  <div id="loginSection">
+    <div class="input-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" placeholder="Enter username" />
+    </div>
+    <div class="input-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter password" />
+    </div>
+    <button onclick="login()">Login</button>
+    <div class="error" id="loginError"></div>
+  </div>
+
+  <!-- Banking Dashboard Section -->
+  <div id="bankSection" class="hidden">
+    <div class="balance">💰 Balance: ₹<span id="balance">5000</span></div>
+
+    <div class="input-group">
+      <label for="amount">Enter Amount</label>
+      <input type="number" id="amount" placeholder="Enter amount" />
+    </div>
+    <button onclick="deposit()">Deposit</button>
+    <button onclick="withdraw()" style="margin-top:0.5rem; background: #d7263d;">Withdraw</button>
+
+    <div class="error" id="actionError"></div>
+  </div>
+</div>
+
+<script>
+  let balance = 5000;
+  const user = {
+    username: "user123",
+    password: "bank123"
+  };
+
+  function login() {
+    const uname = document.getElementById("username").value.trim();
+    const pwd = document.getElementById("password").value.trim();
+    const err = document.getElementById("loginError");
+
+    if (uname === user.username && pwd === user.password) {
+      document.getElementById("loginSection").classList.add("hidden");
+      document.getElementById("bankSection").classList.remove("hidden");
+    } else {
+      err.textContent = "❌ Invalid credentials. Try user123 / bank123";
+    }
+  }
+
+  function deposit() {
+    const amt = parseFloat(document.getElementById("amount").value);
+    const err = document.getElementById("actionError");
+    err.textContent = "";
+
+    if (!amt || amt <= 0) {
+      err.textContent = "⚠️ Enter a valid amount to deposit.";
+      return;
+    }
+
+    balance += amt;
+    updateBalance();
+    document.getElementById("amount").value = "";
+  }
+
+  function withdraw() {
+    const amt = parseFloat(document.getElementById("amount").value);
+    const err = document.getElementById("actionError");
+    err.textContent = "";
+
+    if (!amt || amt <= 0) {
+      err.textContent = "⚠️ Enter a valid amount to withdraw.";
+      return;
+    }
+
+    if (amt > balance) {
+      err.textContent = "❌ Insufficient balance.";
+      return;
+    }
+
+    balance -= amt;
+    updateBalance();
+    document.getElementById("amount").value = "";
+  }
+
+  function updateBalance() {
+    document.getElementById("balance").textContent = balance.toFixed(2);
+  }
+</script>
+
+</body>
+</html>
